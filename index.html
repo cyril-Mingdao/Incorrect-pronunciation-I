@@ -315,6 +315,32 @@ body {
   50% { transform: scale(1.2); opacity: 1; }
 }
 
+
+/* Default / portrait-friendly layout for pronunciation image */
+.question-left {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 1.25rem;
+}
+
+.question-pronounce-img {
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 8px;
+}
+
+/* Portrait: allow the pronunciation image to deform to fit the viewport */
+@media (orientation: portrait) {
+  .question-pronounce-img {
+    width: 100%;
+    height: min(32vh, 240px);
+    object-fit: fill;
+  }
+}
+
 /* Landscape layout for pronunciation image */
 @media (min-width: 640px) and (orientation: landscape) {
   .quiz-container { max-width: 100vw; height: 100vh; display: flex; flex-direction: column; padding: 0; margin: 0; }
@@ -1403,7 +1429,7 @@ function startQuiz() {
   renderAllQuestions();
   currentCardIndex = 0;
   document.getElementById('floatNav').style.display = 'flex';
-  if (isLandscapeWide()) {
+  if (isLandscapeWide() || isPortrait()) {
     showCardByIndex(0);
   } else {
     autoPlayAudio(0);
@@ -1414,6 +1440,10 @@ function startQuiz() {
 
 function isLandscapeWide() {
   return window.matchMedia('(min-aspect-ratio: 16/10) and (min-width: 768px)').matches;
+}
+
+function isPortrait() {
+  return window.matchMedia('(orientation: portrait)').matches;
 }
 
 let currentCardIndex = 0;
@@ -1453,7 +1483,7 @@ function autoPlayAudio(idx) {
 
 function navPrev() {
   if (currentCardIndex > 0) {
-    if (isLandscapeWide()) {
+    if (isLandscapeWide() || isPortrait()) {
       showCardByIndex(currentCardIndex - 1);
     } else {
       currentCardIndex--;
@@ -1467,7 +1497,7 @@ function navPrev() {
 
 function navNext() {
   if (currentCardIndex < questions.length - 1) {
-    if (isLandscapeWide()) {
+    if (isLandscapeWide() || isPortrait()) {
       showCardByIndex(currentCardIndex + 1);
     } else {
       currentCardIndex++;
@@ -1659,7 +1689,7 @@ function restartQuiz() {
   qc.classList.add('active');
   renderAllQuestions();
   document.getElementById('floatNav').style.display = 'flex';
-  if (isLandscapeWide()) {
+  if (isLandscapeWide() || isPortrait()) {
     showCardByIndex(0);
   } else {
     autoPlayAudio(0);
